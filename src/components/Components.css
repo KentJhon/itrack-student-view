@@ -1,0 +1,58 @@
+/* ===========================
+   HEADER
+   =========================== */
+#header {
+  background-color: #1a1851;
+  color: white;
+  padding: 10px 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  z-index: 1000;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand .logo {
+  width: 40px;
+  height: 40px;
+}
+
+#header h1 {
+  font-size: 18px;
+  margin: 0;
+  font-family: "Book Antiqua", serif;
+  white-space: nowrap;
+}
+
+/* ===========================
+   FOOTER
+   =========================== */
+#footer {
+  background-color: #1a1851;
+  color: white;
+  text-align: left;
+  padding: 5px 0;
+  font-family: "Book Antiqua", serif;
+  font-size: 10px;
+
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+#footer p {
+  margin-left: 15px;
+}
