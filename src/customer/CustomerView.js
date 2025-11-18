@@ -29,7 +29,7 @@ function CustomerView() {
 
   // 🔽 Backend URL — LOCAL ONLY (no dev tunnel)
   // const API_BASE = "http://192.168.18.152:8000";
-  const API_BASE = "https://placeholder.com";
+  const API_BASE = "https://itrack-backend-n9z9.onrender.com";
 
   useEffect(() => {
     fetch(`${API_BASE}/items`)
