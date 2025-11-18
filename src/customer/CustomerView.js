@@ -133,10 +133,7 @@ function CustomerView() {
           ) : (
             <p className="no-products">
               No products found.
-              <br />
-              <small>
-                (Items will appear once the main system is connected.)
-              </small>
+             
             </p>
           )}
         </div>
