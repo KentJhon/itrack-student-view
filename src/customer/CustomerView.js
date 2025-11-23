@@ -24,9 +24,9 @@ function CustomerView() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
 
-  const API_BASE = "http://localhost:8000";
+  // API_BASE = "http://localhost:8000";
   // const API_BASE = "http://192.168.18.152:8000";
-  //const API_BASE = "https://captsone-itrack.onrender.com";
+  const API_BASE = "https://captsone-itrack.onrender.com";
 
   useEffect(() => {
     fetch(`${API_BASE}/items`)
