@@ -3,23 +3,20 @@ import "./CustomerView.css";
 import { FiSearch } from "react-icons/fi";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import imagePlaceholder from "../assets/image.png"; // default fallback image
+import imagePlaceholder from "../assets/image.png"; // fallback image
 
-// 🔽 IMPORT YOUR ITEM PHOTOS FROM src/assets
-import cartolinaRed from "../assets/products/cartolina_red.jpg";
-import indexCardHalf from "../assets/products/index_card.jpg";
-import yellowPaper from "../assets/products/yellow_paper.jpg";
-import eraserDrawing from "../assets/products/eraser.jpg";
-// ...import more as needed
+// 📌 CATEGORY IMAGES
+import imgStationery from "../assets/categories/stationery.png";
+import imgGarments from "../assets/categories/garments.png";
+import imgSouvenir from "../assets/categories/souvenir.png";
+import imgBook from "../assets/categories/book.png";
 
-// 🔽 MAP ITEM NAMES (from DB) → IMPORTED IMAGES
-// Make sure these keys match EXACTLY the `name` field from /items
-const imageMap = {
-  "Cartolina U.S. (Red)": cartolinaRed,
-  "Index Card veco brand 1/2": indexCardHalf,
-  "Yellow Paper": yellowPaper,
-  "Eraser Drawing": eraserDrawing,
-  // add more mappings here
+// 📌 MAP CATEGORY → IMAGE
+const categoryImageMap = {
+  "Stationery": imgStationery,
+  "Garments": imgGarments,
+  "Souvenir": imgSouvenir,
+  "Book": imgBook
 };
 
 function CustomerView() {
@@ -27,9 +24,9 @@ function CustomerView() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
 
-  // 🔽 Backend URL — LOCAL ONLY (no dev tunnel)
+  const API_BASE = "http://localhost:8000";
   // const API_BASE = "http://192.168.18.152:8000";
-  const API_BASE = "https://captsone-itrack.onrender.com";
+  //const API_BASE = "https://captsone-itrack.onrender.com";
 
   useEffect(() => {
     fetch(`${API_BASE}/items`)
@@ -41,17 +38,20 @@ function CustomerView() {
       .catch((err) => console.error("Error fetching items:", err));
   }, []);
 
+  // 📌 Get unique categories from DB
   const categories = [
     "All",
     ...Array.from(new Set(products.map((p) => p.category))),
   ];
 
+  // 📌 Filtering logic
   const filteredProducts = products
     .filter((item) => {
       const matchCategory =
         selectedCategory === "All" || item.category === selectedCategory;
-      const name = (item.name || "").toString();
-      const matchSearch = name.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchSearch = item.name
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase());
       return matchCategory && matchSearch;
     })
     .sort((a, b) =>
@@ -63,20 +63,14 @@ function CustomerView() {
       <Header />
 
       <div className="customer-content">
-        {/* HEADER: Categories (LEFT) + Search (RIGHT) */}
+        {/* HEADER: Categories + Search */}
         <div className="customer-header">
-          <div
-            className="customer-categories"
-            role="tablist"
-            aria-label="Product categories"
-          >
+          <div className="customer-categories">
             {categories.map((cat, i) => (
               <button
                 key={i}
                 className={selectedCategory === cat ? "active" : ""}
                 onClick={() => setSelectedCategory(cat)}
-                role="tab"
-                aria-selected={selectedCategory === cat}
               >
                 {cat}
               </button>
@@ -89,9 +83,8 @@ function CustomerView() {
               placeholder="Search products..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              aria-label="Search products"
             />
-            <FiSearch className="search-icon" aria-hidden="true" />
+            <FiSearch className="search-icon" />
           </div>
         </div>
 
@@ -99,42 +92,45 @@ function CustomerView() {
         <div className="customer-grid">
           {filteredProducts.length > 0 ? (
             filteredProducts.map((item, i) => {
-              // 🔽 choose image based on item.name (from DB)
-              const imageSrc = imageMap[item.name] || imagePlaceholder;
+              // 📌 Choose image based on category
+              const catImage = categoryImageMap[item.category] || imagePlaceholder;
 
               return (
                 <div key={i} className="product-card">
                   <img
-                    src={imageSrc}
-                    alt={item.name}
+                    src={catImage}
+                    alt={item.category}
                     loading="lazy"
                     onError={(e) => {
                       e.currentTarget.onerror = null;
                       e.currentTarget.src = imagePlaceholder;
                     }}
                   />
+
                   <div className="product-body">
                     <h3>{item.name}</h3>
+
                     <div className="product-meta">
                       <span className="price">
                         ₱{Number(item.price || 0).toLocaleString()}
                       </span>
+
                       {item.sold ? (
                         <span className="sold">Sold: {item.sold}</span>
                       ) : (
                         <span className="sold">&nbsp;</span>
                       )}
                     </div>
-                    <p className="stock">Stock: {item.stock_quantity ?? 0}</p>
+
+                    <p className="stock">
+                      Stock: {item.stock_quantity ?? 0}
+                    </p>
                   </div>
                 </div>
               );
             })
           ) : (
-            <p className="no-products">
-              No products found.
-             
-            </p>
+            <p className="no-products">No products found.</p>
           )}
         </div>
       </div>
